@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="img/logo.png">
+    <title>XX_FIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --bg-color: #121212; --card-bg: #1E1E1E; --text-color: #FFFFFF; --gray-text: #888888; --border-color: #333333; --success-color: #4CAF50; --ui-font: 'Inter', sans-serif; --title-font: 'Oswald', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--ui-font); min-height: 100vh; overflow-x: hidden; font-size: 18px; padding-bottom: 100px; }
+        .hidden { display: none !important; } .active { display: flex !important; }
+        i { width: 24px; height: 24px; stroke-width: 2; vertical-align: middle; margin-right: 8px; display: inline-block; }
+        .screen { display: none; flex-direction: column; min-height: 100vh; padding: 24px; width: 100%; max-width: 600px; margin: 0 auto; }
+        .logo-main { font-family: var(--title-font); font-size: 3.5rem; letter-spacing: 2px; text-align: center; margin-bottom: 1rem; text-transform: uppercase; }
+        h2 { font-family: var(--title-font); font-size: 1.8rem; margin-bottom: 0.5rem; text-transform: uppercase; display: flex; align-items: center; justify-content: center; }
+        .card { background-color: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .btn-main { background: var(--text-color); color: var(--bg-color); border: none; font-family: var(--title-font); text-transform: uppercase; cursor: pointer; padding: 20px; font-size: 1.2rem; width: 100%; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-top: auto; }
+        .btn-huge { width: 100%; padding: 30px; font-size: 2.5rem; margin-bottom: 15px; background: var(--text-color); color: var(--bg-color); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.5); font-family: var(--title-font); line-height: 1.1; }
+        .btn-huge i { width: 40px; height: 40px; margin-bottom: 10px; margin-right: 0; }
+        .btn-medium { width: 100%; padding: 20px; font-size: 1.2rem; background: transparent; border: 2px solid var(--border-color); color: var(--text-color); display: flex; align-items: center; justify-content: center; border-radius: 12px; cursor: pointer; font-family: var(--title-font); text-transform: uppercase; }
+        .btn-ghost { background: transparent; color: var(--gray-text); width: 100%; padding: 15px; margin-top: 10px; font-size: 1rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .selection-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; }
+        .selection-card.active { border-color: var(--text-color); background: rgba(255, 255, 255, 0.1); }
+        .selection-card i { display: block; margin: 0 auto 10px auto; width: 32px; height: 32px; }
+        .selection-card span { display: block; font-family: var(--title-font); text-transform: uppercase; font-size: 0.9rem; }
+        .small-text { font-size: 0.7rem; color: var(--gray-text); margin-top: 5px; display: block; }
+        .check-group { margin-bottom: 25px; }
+        .check-label { display: flex; align-items: center; margin-bottom: 10px; color: var(--gray-text); font-size: 0.9rem; }
+        .toggle-options { display: flex; gap: 10px; }
+        .toggle-btn { flex: 1; padding: 15px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--gray-text); border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; }
+        .toggle-btn.active { border-color: white; color: white; background: rgba(255,255,255,0.05); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--card-bg); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid var(--border-color); }
+        .stat-value { font-size: 2.5rem; font-family: var(--title-font); display: block; margin-bottom: 5px; }
+        .stat-label { color: var(--gray-text); font-size: 0.8rem; text-transform: uppercase; }
+        .quick-actions { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        .action-btn { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gray-text); font-size: 0.9rem; }
+        .action-btn.weight-btn svg { stroke: #29B6F6; }
+        .action-btn.music-btn svg { stroke: #AB47BC; }
+        .edit-level-btn { background: transparent; border: 1px solid var(--border-color); color: var(--gray-text); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 10px; }
+        .workout-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-family: var(--title-font); font-size: 1.2rem; color: var(--gray-text); }
+        .exit-btn { background: transparent; border: 1px solid var(--border-color); color: var(--gray-text); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .lap-indicator { background: var(--card-bg); padding: 5px 10px; border-radius: 8px; font-size: 0.9rem; border: 1px solid var(--border-color); }
+        .video-container { width: 100%; aspect-ratio: 4/5; background-color: #FFFFFF; margin-bottom: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; overflow: hidden; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .phase-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #121212; background: #FFF; z-index: 10; transition: all 0.3s; }
+        .phase-screen.video-mode { background: transparent; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .phase-screen h3 { font-family: var(--title-font); font-size: 2rem; margin-bottom: 10px; text-transform: uppercase; }
+        .phase-screen .countdown { font-size: 5rem; font-family: var(--title-font); line-height: 1; }
+        #workout-img, #workout-video { width: 100%; height: 100%; object-fit: contain; background: #FFFFFF; }
+        #video-placeholder { color: #ccc; position: absolute; text-align: center; padding: 20px; }
+        .workout-info { text-align: center; margin-bottom: 30px; }
+        #w-exercise-name { font-size: 2.5rem; margin-bottom: 10px; }
+        .workout-controls { position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--card-bg); border-top: 1px solid var(--border-color); padding: 15px; display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 10px; z-index: 50; border-radius: 20px 20px 0 0; }
+        .ctrl-btn { background: var(--bg-color); border: 1px solid var(--border-color); color: white; padding: 15px 10px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .ctrl-btn.pause { background: white; color: black; border: none; }
+        .history-tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .tab-btn { flex: 1; background: none; border: none; color: var(--gray-text); padding: 10px; cursor: pointer; font-family: var(--title-font); text-transform: uppercase; }
+        .tab-btn.active { color: white; border-bottom: 2px solid white; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: var(--card-bg); border-radius: 8px; font-size: 0.9rem; color: var(--gray-text); }
+        .calendar-day.active-day { background: var(--success-color); color: #000; font-weight: bold; }
+        .calendar-day.empty { background: none; }
+        .calendar-nav { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
+        .calendar-nav button { background: var(--card-bg); border: 1px solid var(--border-color); color: white; padding: 5px 15px; border-radius: 8px; cursor: pointer; }
+        .history-item { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .history-item.weight-item { border-left: 4px solid #29B6F6; } 
+        .history-item.workout-item { border-left: 4px solid var(--success-color); }
+        #music-player-bar { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 360px; height: 64px; background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 32px; display: none; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 60; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .music-left { display: flex; align-items: center; justify-content: center; width: 40px; }
+        .music-left i { color: var(--success-color); margin: 0; width: 20px; height: 20px; }
+        .music-info { flex: 1; margin: 0 10px; overflow: hidden; text-align: center; }
+        .music-title { font-size: 0.9rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; color: white; line-height: 1.2; }
+        .music-subtitle { font-size: 0.7rem; color: var(--gray-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .music-controls { display: flex; align-items: center; gap: 2px; }
+        .music-controls button { background: transparent; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .music-controls .play-btn { background: white; color: black; width: 44px; height: 44px; margin: 0 4px; }
+        #install-btn { position: fixed; bottom: 160px; left: 50%; transform: translateX(-50%); background: var(--text-color); color: var(--bg-color); border: none; padding: 10px 20px; border-radius: 20px; font-family: var(--title-font); text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 70; display: none; align-items: center; }
+        #nosleep-video { position: absolute; top: -9999px; left: -9999px; opacity: 0; }
+        .finish-modal, .weight-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; padding: 40px; text-align: center; }
+        .finish-modal h2 { color: var(--success-color); margin-bottom: 20px; }
+        .weight-input { font-size: 3rem; width: 150px; text-align: center; background: var(--bg-color); border: 2px solid var(--text-color); color: white; border-radius: 10px; margin: 20px 0; font-family: var(--title-font); }
+    </style>
+</head>
+<body>
+    <video id="nosleep-video" playsinline loop muted><source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAA+NtZGF0AAACrQYF//+p3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE1MiByMjg1NCBlOWE1OTAzIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAxNyAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTMgbG9va2FoZWFkX3RocmVhZHM9MSBzbGljZWRfdGhyZWFkcz0wIG5yPTAgZGVjaW1hdGU9MSBpbnRlcmxhY2VkPTAgYmx1cmF5X2NvbXBhdD0wIGNvbnN0cmFpbmVkX2ludHJhPTAgYmZyYW1lcz0zIGJfcHlyYW1pZD0yIGJfYWRhcHQ9MSBiX2JpYXM9MCBkaXJlY3Q9MSB3ZWlnaHRiPTEgb3Blbl9nb3A9MCB3ZWlnaHRwPTIga2V5aW50PTI1MCBrZXlpbnRfbWluPTEgc2NlbmVjdXQ9NDAgaW50cmFfcmVmcmVzaD0wIHJjX2xvb2thaGVhZD00MCByYz1jcmYgbWJ0cmVlPTEgY3JmPTIzLjAgcWNvbXA9MC42MCBxcG1pbj0wIHFwbWF4PTY5IHFwc3RlcD00IGlwX3JhdGlvPTEuNDAgYXE9MToxLjAwAIAAAAAwZYiEAD//8m+P5OXfBeLGOfKE3xkODvFZuBflHv/+VwJIta6cbpIo8s/xKNg==" type="video/mp4"></video>
+    
+    <button id="install-btn" onclick="installPWA()"><i data-lucide="download"></i> Instalar App</button>
+    
+    <div id="music-player-bar">
+        <div class="music-left"><i data-lucide="music-2"></i></div>
+        <div class="music-info">
+            <span class="music-title" id="m-title">Sin música</span>
+            <span class="music-subtitle" id="m-sub">Selecciona canción</span>
+        </div>
+        <div class="music-controls">
+            <button onclick="app.prevTrack()"><i data-lucide="skip-back"></i></button>
+            <button class="play-btn" onclick="app.toggleMusic()"><i data-lucide="play"></i></button>
+            <button onclick="app.nextTrack()"><i data-lucide="skip-forward"></i></button>
+        </div>
+    </div>
+
+    <div id="finish-modal" class="finish-modal hidden">
+        <i data-lucide="award" style="width:60px; height:60px; color: var(--success-color); margin-bottom:20px;"></i>
+        <h2>¡COMPLETADO!</h2>
+        <p id="motivational-text">"Cargando frase..."</p>
+        <button class="btn-main" style="width:auto;" onclick="app.closeFinishModal()">VOLVER</button>
+    </div>
+    
+    <div id="weight-modal" class="weight-modal hidden">
+        <h2>PESO</h2>
+        <input type="number" id="weight-input" class="weight-input" placeholder="0.0" step="0.1">
+        <div style="display:flex; gap:20px; margin-top:20px;">
+            <button class="btn-medium" style="border:none;" onclick="app.closeWeightModal()">Cancelar</button>
+            <button class="btn-main" style="width:auto;" onclick="app.saveWeight()">Guardar</button>
+        </div>
+    </div>
+
+    <main id="app-container">
+        <section id="screen-loading" class="screen active"><h1 class="logo-main">XX_FIT</h1><div style="text-align:center; color:var(--gray-text);"><i data-lucide="loader-2" style="width:32px; height:32px;"></i><p style="margin-top:10px;">Cargando...</p></div></section>
+        
+        <section id="screen-onboarding" class="screen">
+            <div class="onboarding-step" data-step="1">
+                <h2><i data-lucide="target"></i> OBJETIVO</h2>
+                <div class="selection-grid">
+                    <div class="selection-card active" onclick="app.selectOption(this, 'goal', 'fuerza')"><i data-lucide="dumbbell"></i><span>Fuerza</span></div>
+                    <div class="selection-card" onclick="app.selectOption(this, 'goal', 'movilidad')"><i data-lucide="activity"></i><span>Movilidad</span></div>
+                </div>
+                <h2><i data-lucide="medal"></i> NIVEL</h2>
+                <div class="selection-grid">
+                    <div class="selection-card active" onclick="app.selectOption(this, 'level', 'recluta')"><i data-lucide="user"></i><span>Recluta</span><span class="small-text">Base</span></div>
+                    <div class="selection-card" onclick="app.selectOption(this, 'level', 'soldado')"><i data-lucide="shield"></i><span>Soldado</span><span class="small-text">+20%</span></div>
+                    <div class="selection-card" onclick="app.selectOption(this, 'level', 'operativo')"><i data-lucide="crosshair"></i><span>Operativo</span><span class="small-text">+50%</span></div>
+                    <div class="selection-card" onclick="app.selectOption(this, 'level', 'veterano')"><i data-lucide="award"></i><span>Veterano</span><span class="small-text">+80%</span></div>
+                    <div class="selection-card full-width" onclick="app.selectOption(this, 'level', 'xurxo')"><i data-lucide="star"></i><span>XURXO</span><span class="small-text">Élite</span></div>
+                </div>
+                <button class="btn-main" onclick="app.nextOnboardingStep(2)">SIGUIENTE</button>
+            </div>
+
+            <div class="onboarding-step hidden" data-step="2">
+                <h2><i data-lucide="box"></i> MATERIAL</h2>
+                <div class="selection-grid" id="materials-grid">
+                    <div class="selection-card active" data-mat="esterilla" onclick="app.toggleMaterial(this)"><i data-lucide="square"></i><span>Esterilla</span></div>
+                    <div class="selection-card" data-mat="mancuernas" onclick="app.toggleMaterial(this)"><i data-lucide="dumbbell"></i><span>Mancuernas</span></div>
+                    <div class="selection-card" data-mat="bandas" onclick="app.toggleMaterial(this)"><i data-lucide="activity"></i><span>Bandas</span></div>
+                    <div class="selection-card" data-mat="banco" onclick="app.toggleMaterial(this)"><i data-lucide="layout"></i><span>Banco</span></div>
+                </div>
+                <button class="btn-main" onclick="app.finishOnboarding()">GUARDAR</button>
+            </div>
+        </section>
+
+        <section id="screen-home" class="screen">
+            <header style="text-align: center;">
+                <h1 class="logo-main">XX_FIT</h1>
+                <div style="display:flex; justify-content:center; align-items:center;">
+                    <span id="user-level-display" style="color:var(--gray-text); text-transform:uppercase;">NIVEL: RECLUTA</span>
+                    <button class="edit-level-btn" onclick="app.editSettings()"><i data-lucide="pencil"></i></button>
+                </div>
+            </header>
+            <div class="stats-grid">
+                <div class="stat-card"><i data-lucide="flame" style="color:#FF4D4D; margin-bottom:10px;"></i><span class="stat-value" id="streak-count">0</span><span class="stat-label">Racha</span></div>
+                <div class="stat-card"><i data-lucide="calendar-check" style="color:#4DA6FF; margin-bottom:10px;"></i><span class="stat-value" id="weekly-count">0</span><span class="stat-label">Esta Semana</span></div>
+            </div>
+            <div class="quick-actions">
+                <button class="action-btn weight-btn" onclick="app.openWeightModal()"><i data-lucide="scale"></i> Peso</button>
+                <button class="action-btn music-btn" onclick="app.loadMusic()"><i data-lucide="music"></i> Música</button>
+                <input type="file" id="music-input" accept="audio/*" multiple style="display:none" onchange="app.handleMusicFiles(this.files)">
+            </div>
+            <div class="card" style="border-style: dashed;"><p id="motivational-quote" style="font-style:italic; color:var(--gray-text);">"La disciplina es el puente."</p></div>
+            <div style="margin-top: auto; margin-bottom: 20px;">
+                <button class="btn-huge" onclick="app.startDailyCheck()"><i data-lucide="play-circle"></i>ENTRENAR<span class="sub-text">Sesión adaptada</span></button>
+                <button class="btn-medium" onclick="app.startEmergencyMode()"><i data-lucide="zap"></i> MODO 5 MIN</button>
+            </div>
+            <button class="btn-ghost" onclick="app.showHistory()"><i data-lucide="time"></i> Historial</button>
+        </section>
+
+        <section id="screen-checkin" class="screen">
+            <h2>ESTADO HOY</h2>
+            <div class="card">
+                <div class="check-group"><div class="check-label">Energía</div><div class="toggle-options" id="energy-group"><button class="toggle-btn" data-val="1" onclick="app.selectToggle(this, 'energy')"><i data-lucide="battery-low"></i> Bajo</button><button class="toggle-btn active" data-val="3" onclick="app.selectToggle(this, 'energy')"><i data-lucide="battery-medium"></i> Medio</button><button class="toggle-btn" data-val="5" onclick="app.selectToggle(this, 'energy')"><i data-lucide="battery-full"></i> Alto</button></div></div>
+                <div class="check-group"><div class="check-label">Dolor</div><div class="toggle-options" id="pain-group"><button class="toggle-btn active" data-val="no" onclick="app.selectToggle(this, 'pain')"><i data-lucide="check"></i> Ninguno</button><button class="toggle-btn" data-val="leve" onclick="app.selectToggle(this, 'pain')"><i data-lucide="meh"></i> Leve</button><button class="toggle-btn" data-val="si" onclick="app.selectToggle(this, 'pain')"><i data-lucide="frown"></i> Sí</button></div></div>
+                <div class="check-group"><div class="check-label">Vueltas</div><div class="toggle-options" id="laps-group"><button class="toggle-btn" data-val="1" onclick="app.selectToggle(this, 'laps')">1</button><button class="toggle-btn active" data-val="2" onclick="app.selectToggle(this, 'laps')">2</button><button class="toggle-btn" data-val="3" onclick="app.selectToggle(this, 'laps')">3</button></div></div>
+            </div>
+            <button class="btn-main" onclick="app.generateWorkout()">GENERAR</button>
+        </section>
+
+        <section id="screen-workout" class="screen dark-bg">
+            <div class="workout-header">
+                <button class="exit-btn" onclick="app.exitWorkout()"><i data-lucide="x"></i></button>
+                <span id="w-timer">00:00</span>
+                <span id="w-round" class="lap-indicator">VUELTA 1</span>
+            </div>
+            <div class="video-container">
+                <div id="phase-screen" class="phase-screen hidden"><h3 id="phase-title">CALENTAMIENTO</h3><div id="phase-timer" class="countdown">20</div><p id="phase-subtitle">¡Prepárate!</p></div>
+                <div id="video-placeholder"><i data-lucide="image"></i><br>GIF</div>
+                <img id="workout-img" class="hidden" src="" alt="Ejercicio">
+                <video id="workout-video" class="hidden" playsinline loop muted></video>
+            </div>
+            <div class="workout-info"><h2 id="w-exercise-name">EJERCICIO</h2><p id="w-reps">x 12</p></div>
+            <div class="workout-controls">
+                <button class="ctrl-btn" onclick="app.prevStep()"><i data-lucide="skip-back"></i></button>
+                <button class="ctrl-btn pause" onclick="app.togglePause()"><span id="pause-text">PAUSAR</span></button>
+                <button class="ctrl-btn" onclick="app.nextStep()"><i data-lucide="skip-forward"></i></button>
+            </div>
+        </section>
+
+        <section id="screen-history" class="screen">
+            <div class="history-tabs">
+                <button class="tab-btn active" onclick="app.showHistoryTab('list')">LISTADO</button>
+                <button class="tab-btn" onclick="app.showHistoryTab('calendar')">CALENDARIO</button>
+            </div>
+            <div id="history-list-view"><div id="history-list"></div></div>
+            <div id="history-calendar-view" class="hidden">
+                <div class="calendar-nav">
+                    <button onclick="app.changeCalendarMonth(-1)"><i data-lucide="chevron-left"></i></button>
+                    <span id="calendar-month">MES</span>
+                    <button onclick="app.changeCalendarMonth(1)"><i data-lucide="chevron-right"></i></button>
+                </div>
+                <div id="calendar-grid" class="calendar-grid"></div>
+            </div>
+        </section>
+    </main>
+    <audio id="audio-player"></audio>
+
+    <script>
+        // SW & PWA
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-btn').style.display = 'flex'; });
+        function installPWA() { if(!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; document.getElementById('install-btn').style.display = 'none'; }); }
+        try { lucide.createIcons(); } catch(e) {}
+
+        // CONFIG
+        // Apuntamos a la carpeta 'img' de tu repositorio
+        const GITHUB_REPO = "https://raw.githubusercontent.com/xurxo77/XX_FIT/main/img/";
+        const WARMUP_URL = GITHUB_REPO + "warmup.mp4"; 
+        
+        const LEVEL_CONFIG = {
+            'recluta':   { repMult: 0.8, durMult: 0.8, restMult: 1.4 },
+            'soldado':   { repMult: 1.0, durMult: 1.0, restMult: 1.2 },
+            'operativo': { repMult: 1.2, durMult: 1.2, restMult: 1.0 },
+            'veterano':  { repMult: 1.5, durMult: 1.4, restMult: 0.9 },
+            'xurxo':     { repMult: 2.0, durMult: 1.8, restMult: 0.8 }
+        };
+        const QUOTES = ["El dolor es temporal.", "No cuentes los días.", "Tu cuerpo puede todo.", "El único mal entreno es el que no se hace."];
+
+        // --- NUEVA BASE DE DATOS: SMARTWORKOUT.FR (NOMBRES TAL CUAL) ---
+        
+        const SMART_WORKOUT_DATA = [
+            // POIDS CORPOREL
+            {id: 101, name: "Pompes", file: "pompes.gif", target: "pectorals", mat: "esterilla"},
+            {id: 102, name: "Pompes diamant", file: "pompes-diamant.gif", target: "triceps", mat: "esterilla"},
+            {id: 103, name: "Pompes décliné", file: "pompes-decline.gif", target: "pectorals", mat: "esterilla"},
+            {id: 104, name: "Pompes incliné", file: "pompes-incline.gif", target: "pectorals", mat: "banco"},
+            {id: 105, name: "Dips (chaises)", file: "dips-chaises.gif", target: "triceps", mat: "banco"},
+            {id: 106, name: "Traction (pronation)", file: "traction-pronation.gif", target: "lats", mat: "esterilla"},
+            {id: 107, name: "Traction (supination)", file: "traction-supination.gif", target: "biceps", mat: "esterilla"},
+            {id: 108, name: "Muscle-up", file: "muscle-up.gif", target: "lats", mat: "esterilla"},
+            {id: 109, name: "Squat", file: "squat.gif", target: "quads", mat: "esterilla"},
+            {id: 110, name: "Fentes avant", file: "fentes-avant.gif", target: "glutes", mat: "esterilla"},
+            {id: 111, name: "Fentes arrière", file: "fentes-arriere.gif", target: "glutes", mat: "esterilla"},
+            {id: 112, name: "Burpee", file: "burpee.gif", target: "cardio", mat: "esterilla"},
+            {id: 113, name: "Mountain Climber", file: "mountain-climber.gif", target: "cardio", mat: "esterilla"},
+            {id: 114, name: "Crunch", file: "crunch.gif", target: "abs", mat: "esterilla"},
+            {id: 115, name: "Relevé de jambes", file: "releve-jambes.gif", target: "abs", mat: "esterilla"},
+            {id: 116, name: "Planche (Gainage)", file: "plance-gainage.gif", target: "abs", mat: "esterilla"},
+            {id: 117, name: "Superman", file: "superman.gif", target: "spine", mat: "esterilla"},
+            {id: 118, name: "Ponte fessier", file: "ponte-fessier.gif", target: "glutes", mat: "esterilla"},
+            {id: 119, name: "Jumping Jacks", file: "jumping-jacks.gif", target: "cardio", mat: "esterilla"},
+
+            // HALTÈRES
+            {id: 201, name: "Développé épaules haltères", file: "developpe-epaules.gif", target: "delts", mat: "mancuernas"},
+            {id: 202, name: "Élévations latérales", file: "elevations-laterales.gif", target: "delts", mat: "mancuernas"},
+            {id: 203, name: "Élévations frontales", file: "elevations-frontales.gif", target: "delts", mat: "mancuernas"},
+            {id: 204, name: "Curl biceps haltères", file: "curl-biceps.gif", target: "biceps", mat: "mancuernas"},
+            {id: 205, name: "Curl marteau", file: "curl-marteau.gif", target: "biceps", mat: "mancuernas"},
+            {id: 206, name: "Extension triceps haltère", file: "extension-triceps-haltere.gif", target: "triceps", mat: "mancuernas"},
+            {id: 207, name: "Développé couché haltères", file: "developpe-couche.gif", target: "pectorals", mat: "mancuernas"},
+            {id: 208, name: "Écarté couché haltères", file: "ecarte-couche.gif", target: "pectorals", mat: "mancuernas"},
+            {id: 209, name: "Rowing haltère une main", file: "rowing-haltere.gif", target: "upper back", mat: "mancuernas"},
+            {id: 210, name: "Squat haltères", file: "squat-halteres.gif", target: "quads", mat: "mancuernas"},
+            {id: 211, name: "Fentes haltères", file: "fentes-halteres.gif", target: "glutes", mat: "mancuernas"},
+            {id: 212, name: "Soulevé de terre haltères", file: "souleve-terre.gif", target: "hamstrings", mat: "mancuernas"},
+
+            // BANCO
+            {id: 301, name: "Développé couché (banco)", file: "developpe-banc.gif", target: "pectorals", mat: "banco"},
+            {id: 302, name: "Écarté sur banc incliné", file: "ecarte-incline.gif", target: "pectorals", mat: "banco"},
+            {id: 303, name: "Curl concentré", file: "curl-concentre.gif", target: "biceps", mat: "banco"},
+            {id: 304, name: "Extension triceps (banco)", file: "extension-triceps-banc.gif", target: "triceps", mat: "banco"},
+            {id: 305, name: "Dips entre bancs", file: "dips-bancs.gif", target: "triceps", mat: "banco"},
+
+            // BANDES
+            {id: 401, name: "Tirage poitrine (bande)", file: "tirage-poitrine.gif", target: "lats", mat: "bandas"},
+            {id: 402, name: "Face pull (bande)", file: "face-pull.gif", target: "delts", mat: "bandas"},
+            {id: 403, name: "Curl biceps (bande)", file: "curl-bande.gif", target: "biceps", mat: "bandas"},
+            {id: 404, name: "Extension triceps (bande)", file: "extension-bande.gif", target: "triceps", mat: "bandas"},
+            {id: 405, name: "Squat (bande)", file: "squat-bande.gif", target: "glutes", mat: "bandas"},
+            {id: 406, name: "Abductions hanches (bande)", file: "abductions.gif", target: "abductors", mat: "bandas"},
+            {id: 407, name: "Good morning (bande)", file: "good-morning.gif", target: "hamstrings", mat: "bandas"}
+        ];
+
+        // Parser simple
+        const EXERCISE_DB = SMART_WORKOUT_DATA.map(ex => {
+            let m = []; 
+            if(['abs','spine'].includes(ex.target)) m.push('core'); 
+            if(['lats','biceps','traps','forearms','upper back','middle back'].includes(ex.target)) m.push('pull'); 
+            if(['pectorals','triceps','delts','chest'].includes(ex.target)) m.push('push'); 
+            if(['quads','hamstrings','glutes','calves','adductors','abductors'].includes(ex.target)) m.push('legs'); 
+            if(['cardio'].includes(ex.target)) m.push('full'); 
+            if(m.length===0) m.push('full');
+            
+            let e = [];
+            if(ex.mat === 'esterilla') e = ['esterilla'];
+            if(ex.mat === 'mancuernas') e = ['mancuernas'];
+            if(ex.mat === 'banco') e = ['banco'];
+            if(ex.mat === 'bandas') e = ['bandas'];
+
+            return { 
+                name: ex.name, // Nombre en Francés
+                muscles: m, 
+                equipment: e, 
+                baseReps: (m.includes('core')||m.includes('full'))?null:12, 
+                baseDur: (m.includes('core')||m.includes('full'))?40:null, 
+                img: GITHUB_REPO + ex.file 
+            };
+        });
+
+
+        // APP LOGIC
+        const app = {
+            state: { user: null, workoutSequence: [], currentStepIndex: 0, isPaused: false, timerInterval: null, timerValue: 0, checkin: { laps: '2' }, playlist: [], calendarDate: new Date(), wakeLock: null, currentTrackIndex: 0, isMusicPlaying: false },
+            audioPlayer: null,
+
+            init() { 
+                this.loadUserData(); 
+                this.audioPlayer = document.getElementById('audio-player'); 
+                setTimeout(() => { if(this.state.user){ this.navigate('home'); this.updateHomeUI(); } else { this.navigate('onboarding'); } lucide.createIcons(); }, 100); 
+            },
+            saveUserData() { localStorage.setItem('xx_fit_user', JSON.stringify(this.state.user)); },
+            loadUserData() { const u = localStorage.getItem('xx_fit_user'); if(u) this.state.user = JSON.parse(u); },
+            navigate(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('screen-'+id).classList.add('active'); lucide.createIcons(); },
+            selectOption(el, type, val) { el.parentNode.querySelectorAll('.selection-card').forEach(c=>c.classList.remove('active')); el.classList.add('active'); if(!this.state.user) this.state.user={}; this.state.user[type]=val; },
+            toggleMaterial(el) { el.classList.toggle('active'); },
+            selectToggle(el, type) { el.parentNode.querySelectorAll('.toggle-btn').forEach(c=>c.classList.remove('active')); el.classList.add('active'); this.state.checkin[type]=el.getAttribute('data-val'); },
+            nextOnboardingStep() { document.querySelector('.onboarding-step[data-step="1"]').classList.add('hidden'); document.querySelector('.onboarding-step[data-step="2"]').classList.remove('hidden'); lucide.createIcons(); },
+            finishOnboarding() { if(!this.state.user) this.state.user={}; this.state.user.materials=[]; document.querySelectorAll('#materials-grid .active').forEach(b=>this.state.user.materials.push(b.getAttribute('data-mat'))); if(!this.state.user.level) this.state.user.level='recluta'; this.saveUserData(); this.navigate('home'); this.updateHomeUI(); },
+            updateHomeUI() { if(!this.state.user) return; document.getElementById('user-level-display').innerText="NIVEL: "+(this.state.user.level||'RECLUTA').toUpperCase(); document.getElementById('streak-count').innerText=this.state.user.streak||0; document.getElementById('weekly-count').innerText=this.state.user.history?this.state.user.history.length:0; lucide.createIcons(); },
+            editSettings() { this.navigate('onboarding'); document.querySelector('.onboarding-step[data-step="1"]').classList.remove('hidden'); document.querySelector('.onboarding-step[data-step="2"]').classList.add('hidden'); lucide.createIcons(); },
+            startDailyCheck() { this.navigate('checkin'); },
+            generateWorkout() {
+                if(!this.state.user) this.state.user={ level:'recluta', materials:['esterilla'], history:[], streak:0 }; if(!this.state.user.materials) this.state.user.materials=['esterilla']; if(!this.state.user.level) this.state.user.level='recluta';
+                let level=this.state.user.level||'recluta'; const cfg=LEVEL_CONFIG[level]||LEVEL_CONFIG['recluta']; const pain=this.state.checkin.pain;
+                
+                let pool = EXERCISE_DB.filter(e => e.equipment.includes('esterilla'));
+                if(this.state.user.materials.includes('mancuernas')) pool=pool.concat(EXERCISE_DB.filter(e=>e.equipment.includes('mancuernas')));
+                if(this.state.user.materials.includes('bandas')) pool=pool.concat(EXERCISE_DB.filter(e=>e.equipment.includes('bandas')));
+                if(this.state.user.materials.includes('banco')) pool=pool.concat(EXERCISE_DB.filter(e=>e.equipment.includes('banco')));
+                
+                if(pool.length===0) pool.push(EXERCISE_DB[0]);
+                let sel=[]; 
+                if(pain==='si'){ sel=pool.filter(e=>e.muscles.includes('spine')); if(sel.length===0) sel=[pool[0]]; } 
+                else { 
+                    const pick=arr=>arr.length?arr[Math.floor(Math.random()*arr.length)]:null; 
+                    const add=ex=>{ if(ex&&!sel.find(s=>s.name===ex.name)) sel.push(ex); }; 
+                    add(pick(pool.filter(e=>e.muscles.includes('legs')))); 
+                    add(pick(pool.filter(e=>e.muscles.includes('push')))); 
+                    add(pick(pool.filter(e=>e.muscles.includes('pull')))); 
+                    add(pick(pool.filter(e=>e.muscles.includes('core')))); 
+                    let rem=pool.filter(e=>!sel.includes(e)); 
+                    while(sel.length<5 && rem.length>0) sel.push(rem.shift()); 
+                }
+                let seq=[]; 
+                seq.push({ type:'warmup', duration:300, title:"ÉCHAUFFEMENT", speak:"Calentamiento", media: WARMUP_URL }); 
+                
+                let baseRest = 15; 
+                let rest = Math.floor(baseRest * cfg.restMult); 
+                let laps=parseInt(this.state.checkin.laps)||2; 
+                if(pain==='si'){ laps=1; rest=25; }
+                
+                for(let l=1; l<=laps; l++) { 
+                    sel.forEach((ex, i) => { 
+                        let r=ex.baseReps?Math.floor(ex.baseReps*cfg.repMult):null; 
+                        let d=ex.baseDur?Math.floor(ex.baseDur*cfg.durMult):null; 
+                        seq.push({ type:'exercise', data:{...ex, reps:r, duration:d}, lap:l, totalLaps:laps, exIndex:i+1, totalEx:sel.length, speak:ex.name }); 
+                        if(!(l===laps && i===sel.length-1)) seq.push({ type:'rest', duration:rest, title:"REPOS", speak:"Descanso" }); 
+                    }); 
+                }
+                seq.push({ type:'stretch', duration:20, title:"ÉTIREMENTS", speak:"Estiramientos" }); 
+                this.state.workoutSequence=seq; this.state.currentStepIndex=0; 
+                this.startWorkoutSession();
+            },
+            async startWorkoutSession() { try{ if('wakeLock' in navigator) this.state.wakeLock = await navigator.wakeLock.request('screen'); document.getElementById('nosleep-video').play().catch(()=>{}); }catch(e){} this.navigate('workout'); this.loadStep(0); },
+            loadStep(i) {
+                if(i>=this.state.workoutSequence.length) { this.finishSession(); return; } this.state.currentStepIndex=i; const step=this.state.workoutSequence[i];
+                const ph=document.getElementById('phase-screen'), img=document.getElementById('workout-img'), vid=document.getElementById('workout-video'), pl=document.getElementById('video-placeholder'), tm=document.getElementById('w-timer'), nm=document.getElementById('w-exercise-name'), rp=document.getElementById('w-reps'), rnd=document.getElementById('w-round');
+                clearInterval(this.state.timerInterval); ph.classList.add('hidden'); img.classList.add('hidden'); vid.classList.add('hidden'); pl.classList.add('hidden'); vid.pause();
+                try{ if(step.speak && 'speechSynthesis' in window) { speechSynthesis.cancel(); let u=new SpeechSynthesisUtterance(step.speak); u.lang='es-ES'; speechSynthesis.speak(u); } }catch(e){}
+                let url = step.type==='exercise' ? step.data.img : step.media; 
+                let isVid = url && (url.endsWith('.mp4') || url.endsWith('.mov'));
+                
+                if(url) {
+                    if(isVid){ 
+                        vid.src=url;
+                        vid.onerror = () => { vid.classList.add('hidden'); pl.classList.remove('hidden'); pl.innerHTML="VIDEO NO DISPONIBLE"; };
+                        vid.classList.remove('hidden'); 
+                        vid.play().catch(()=>{ vid.onerror(); });
+                    } else { 
+                        img.src=url; 
+                        img.classList.remove('hidden'); 
+                        img.onerror = function() { img.classList.add('hidden'); pl.classList.remove('hidden'); pl.innerHTML=`<b>${step.data.name}</b>`; };
+                    }
+                } else {
+                     pl.classList.remove('hidden'); pl.innerHTML=`<b>${step.data.name}</b>`;
+                }
+                
+                if(step.type==='exercise') { const ex=step.data; nm.innerText=ex.name; rp.innerText=ex.reps?"x "+ex.reps:ex.duration+" seg"; rnd.innerText=`VUELTA ${step.lap}/${step.totalLaps}`; if(ex.duration){ tm.innerText=this.fmt(ex.duration); this.state.timerValue=ex.duration; this.startCountdown(); } else { this.state.timerValue=0; tm.innerText="00:00"; this.startStopwatch(); } }
+                else { nm.innerText=step.title; rp.innerText=""; rnd.innerText=""; ph.classList.remove('hidden'); ph.classList.remove('video-mode'); document.getElementById('phase-title').innerText=step.title; document.getElementById('phase-timer').innerText=step.duration; tm.innerText = this.fmt(step.duration); this.state.timerValue=step.duration; this.startCountdown(); }
+            },
+            startCountdown() { this.state.timerInterval=setInterval(()=>{ if(this.state.isPaused) return; this.state.timerValue--; document.getElementById('phase-timer').innerText=this.state.timerValue; document.getElementById('w-timer').innerText=this.fmt(this.state.timerValue); if(this.state.timerValue<=0){ clearInterval(this.state.timerInterval); this.nextStep(); } }, 1000); },
+            startStopwatch() { this.state.timerInterval=setInterval(()=>{ if(!this.state.isPaused){ this.state.timerValue++; document.getElementById('w-timer').innerText=this.fmt(this.state.timerValue); } }, 1000); },
+            fmt(s) { let m=Math.floor(s/60); let sec=s%60; return m.toString().padStart(2,'0')+':'+sec.toString().padStart(2,'0'); },
+            nextStep() { this.loadStep(this.state.currentStepIndex + 1); },
+            prevStep() { if(this.state.currentStepIndex>0) this.loadStep(this.state.currentStepIndex-1); },
+            togglePause() { this.state.isPaused=!this.state.isPaused; document.getElementById('pause-text').innerText=this.state.isPaused?"CONTINUER":"PAUSER"; if(this.state.isPaused) document.getElementById('workout-video').pause(); else document.getElementById('workout-video').play().catch(()=>{}); },
+            exitWorkout() { clearInterval(this.state.timerInterval); document.getElementById('workout-video').pause(); if(this.state.wakeLock) this.state.wakeLock.release(); this.navigate('home'); },
+            finishSession() { clearInterval(this.state.timerInterval); document.getElementById('workout-video').pause(); if(this.state.wakeLock) this.state.wakeLock.release(); if(!this.state.user.history) this.state.user.history=[]; this.state.user.history.push({date:Date.now(), dur:document.getElementById('w-timer').innerText}); this.state.user.streak=(this.state.user.streak||0)+1; this.saveUserData(); document.getElementById('motivational-text').innerText=`"${QUOTES[Math.floor(Math.random()*QUOTES.length)]}"`; document.getElementById('finish-modal').classList.remove('hidden'); },
+            closeFinishModal() { document.getElementById('finish-modal').classList.add('hidden'); this.navigate('home'); this.updateHomeUI(); },
+            startEmergencyMode() { this.state.user={level:'xurxo', materials:['esterilla']}; this.generateWorkout(); },
+            openWeightModal() { document.getElementById('weight-modal').classList.remove('hidden'); lucide.createIcons(); },
+            closeWeightModal() { document.getElementById('weight-modal').classList.add('hidden'); },
+            saveWeight() { let v=document.getElementById('weight-input').value; if(v){ if(!this.state.user.weight) this.state.user.weight=[]; this.state.user.weight.push({date:Date.now(), val:parseFloat(v)}); this.saveUserData(); alert("Guardado"); this.closeWeightModal(); } },
+            loadMusic() { document.getElementById('music-input').click(); },
+            handleMusicFiles(f) { this.state.playlist=Array.from(f).map(f=>({url:URL.createObjectURL(f), name:f.name})); this.state.currentTrackIndex=0; if(this.state.playlist.length){ document.getElementById('music-player-bar').style.display='flex'; this.loadTrack(0); } lucide.createIcons(); },
+            loadTrack(index) { if (!this.state.playlist.length) return; this.state.currentTrackIndex = index; const track = this.state.playlist[index]; document.getElementById('m-title').innerText = track.name; document.getElementById('m-sub').innerText = "Listo"; this.audioPlayer.src = track.url; this.audioPlayer.load(); this.audioPlayer.onended = () => this.nextTrack(); },
+            toggleMusic() { if(!this.state.playlist.length) return; if(this.state.isMusicPlaying){ this.audioPlayer.pause(); this.updatePlayBtn('play'); this.state.isMusicPlaying = false; document.getElementById('m-sub').innerText = "Pausado"; } else { if (!this.audioPlayer.src) this.loadTrack(this.state.currentTrackIndex); this.audioPlayer.play().then(_ => { this.state.isMusicPlaying = true; this.updatePlayBtn('pause'); document.getElementById('m-sub').innerText = "Reproduciendo"; }).catch(error => { this.updatePlayBtn('play'); }); } lucide.createIcons(); },
+            prevTrack() { if(!this.state.playlist.length) return; let newIndex = (this.state.currentTrackIndex - 1 + this.state.playlist.length) % this.state.playlist.length; this.loadTrack(newIndex); if(this.state.isMusicPlaying) this.audioPlayer.play().catch(e=>console.log(e)); },
+            nextTrack() { if(!this.state.playlist.length) return; let newIndex = (this.state.currentTrackIndex + 1) % this.state.playlist.length; this.loadTrack(newIndex); if(this.state.isMusicPlaying) this.audioPlayer.play().catch(e=>console.log(e)); },
+            updatePlayBtn(iconName) { const btn = document.querySelector('.play-btn i'); btn.setAttribute('data-lucide', iconName); },
+            showHistory() { this.navigate('history'); this.showHistoryTab('list'); let events = []; if(this.state.user && this.state.user.history) this.state.user.history.forEach(h => events.push({type:'workout', date: h.date, data: h})); if(this.state.user && this.state.user.weight) this.state.user.weight.forEach(w => events.push({type:'weight', date: w.date, data: w})); if(events.length===0){ document.getElementById('history-list').innerHTML="<div class='history-item'>No hay datos</div>"; return; } events.sort((a,b) => b.date - a.date); let html = ""; events.forEach(ev => { if(ev.type === 'workout') { html+=`<div class='history-item workout-item'><div><span style='font-family:var(--title-font)'>Entreno</span><span style='color:var(--gray-text); font-size:0.8rem'>${new Date(ev.data.date).toLocaleDateString()}</span></div><div style='display:flex; align-items:center; gap:10px'><span style='font-family:monospace'>${ev.data.dur}</span><button onclick='app.deleteHist(${ev.data.date})'><i data-lucide='trash-2'></i></button></div></div>`; } else { html+=`<div class='history-item weight-item'><div><span style='font-family:var(--title-font)'>Peso</span><span style='color:var(--gray-text); font-size:0.8rem'>${new Date(ev.date).toLocaleDateString()}</span></div><div style='display:flex; align-items:center; gap:10px'><span style='font-family:monospace'>${ev.data.val} kg</span><button onclick='app.deleteWeight(${ev.date})'><i data-lucide='trash-2'></i></button></div></div>`; } }); document.getElementById('history-list').innerHTML=html; lucide.createIcons(); },
+            deleteHist(ts) { this.state.user.history=this.state.user.history.filter(h=>h.date!==ts); this.saveUserData(); this.showHistory(); },
+            deleteWeight(ts) { this.state.user.weight = this.state.user.weight.filter(w=>w.date!==ts); this.saveUserData(); this.showHistory(); },
+            showHistoryTab(t) { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); if(t==='list'){ document.querySelector('.tab-btn:first-child').classList.add('active'); document.getElementById('history-list-view').classList.remove('hidden'); document.getElementById('history-calendar-view').classList.add('hidden'); } else { document.querySelector('.tab-btn:last-child').classList.add('active'); document.getElementById('history-list-view').classList.add('hidden'); document.getElementById('history-calendar-view').classList.remove('hidden'); this.renderCal(); } },
+            renderCal() { let g=document.getElementById('calendar-grid'); g.innerHTML=''; let m=this.state.calendarDate.getMonth(); let y=this.state.calendarDate.getFullYear(); document.getElementById('calendar-month').innerText=new Date(y,m,1).toLocaleString('es-es', {month:'long', year:'numeric'}); let fd=new Date(y,m,1).getDay(); let sd=(fd+6)%7; let dim=new Date(y,m+1,0).getDate(); for(let i=0;i<sd;i++) g.innerHTML+='<div class="calendar-day empty"></div>'; let acts=this.state.user&&this.state.user.history?this.state.user.history.map(h=>new Date(h.date).toDateString()):[]; for(let d=1;d<=dim;d++){ let c='calendar-day'; if(acts.includes(new Date(y,m,d).toDateString())) c+=' active-day'; g.innerHTML+=`<div class="${c}">${d}</div>`; } lucide.createIcons(); },
+            changeCalendarMonth(d) { this.state.calendarDate.setMonth(this.state.calendarDate.getMonth()+d); this.renderCal(); }
+        };
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>
