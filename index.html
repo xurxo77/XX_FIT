@@ -54,8 +54,9 @@
         .phase-screen h3 { font-family: var(--title-font); font-size: 2rem; margin-bottom: 10px; text-transform: uppercase; }
         .phase-screen .countdown { font-size: 5rem; font-family: var(--title-font); line-height: 1; }
         #workout-img, #workout-video { width: 100%; height: 100%; object-fit: contain; background: #FFFFFF; }
-        #video-placeholder { color: #ccc; position: absolute; text-align: center; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        #video-placeholder b { font-size: 1.5rem; color: #333; margin-top: 10px; }
+        #video-placeholder { color: #121212; position: absolute; text-align: center; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: white; z-index: 5; }
+        #video-placeholder i { color: #ccc; margin-bottom: 10px; width: 48px; height: 48px; }
+        #video-placeholder b { font-size: 1.8rem; font-family: var(--title-font); text-transform: uppercase; }
         .workout-info { text-align: center; margin-bottom: 30px; }
         #w-exercise-name { font-size: 2.5rem; margin-bottom: 10px; }
         .workout-controls { position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--card-bg); border-top: 1px solid var(--border-color); padding: 15px; display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 10px; z-index: 50; border-radius: 20px 20px 0 0; }
@@ -240,7 +241,7 @@
         // CONFIG
         const GITHUB_REPO = "https://raw.githubusercontent.com/xurxo77/XX_FIT/main/";
         const WARMUP_URL = GITHUB_REPO + "warmup.mp4"; 
-        const WARMUP_FALLBACK = GITHUB_REPO + "mountain-climber.gif"; // Fallback por si el video falla
+        const WARMUP_FALLBACK = GITHUB_REPO + "mountain-climber.gif"; 
         
         const LEVEL_CONFIG = {
             'recluta':   { repMult: 0.8, durMult: 0.8, restMult: 1.4 },
@@ -306,17 +307,17 @@
             {id: 407, name: "Good morning (banda)", file: "good-morning.gif", target: "hamstrings", mat: "bandas"}
         ];
 
-        // --- NUEVA SECCIÓN DE ESTIRAMIENTOS (Placeholder GIFs) ---
+        // --- SECCIÓN DE ESTIRAMIENTOS ---
+        // Los nombres de archivo son placeholders. Si no existen, el código mostrará el nombre del ejercicio.
         const STRETCH_DATA = [
-            {id: 500, name: "Estiramiento de cuello", file: "estiramiento-cuello.gif", target: "spine", mat: "esterilla"},
-            {id: 501, name: "Estiramiento de hombros", file: "estiramiento-hombros.gif", target: "delts", mat: "esterilla"},
-            {id: 502, name: "Estiramiento de tríceps", file: "estiramiento-triceps.gif", target: "triceps", mat: "esterilla"},
-            {id: 503, name: "Estiramiento de pecho", file: "estiramiento-pectoral.gif", target: "pectorals", mat: "esterilla"},
-            {id: 504, name: "Estiramiento de espalda", file: "estiramiento-espalda.gif", target: "lats", mat: "esterilla"},
-            {id: 505, name: "Estiramiento de isquios", file: "estiramiento-isquios.gif", target: "hamstrings", mat: "esterilla"}
+            {id: 500, name: "Estiramiento de cuello", file: "stretch-neck.gif"},
+            {id: 501, name: "Estiramiento de hombros", file: "stretch-shoulders.gif"},
+            {id: 502, name: "Estiramiento de tríceps", file: "stretch-triceps.gif"},
+            {id: 503, name: "Estiramiento de pecho", file: "stretch-chest.gif"},
+            {id: 504, name: "Estiramiento de espalda", file: "stretch-back.gif"},
+            {id: 505, name: "Estiramiento de isquios", file: "stretch-hams.gif"}
         ];
 
-        // Parser simple
         const EXERCISE_DB = SMART_WORKOUT_DATA.map(ex => {
             let m = []; 
             if(['abs','spine'].includes(ex.target)) m.push('core'); 
@@ -336,10 +337,10 @@
         const STRETCH_DB = STRETCH_DATA.map(ex => {
              return { 
                 name: ex.name, 
-                muscles: ['core'], // Clasificación simple
+                muscles: ['core'], 
                 equipment: ['esterilla'], 
                 baseReps: null, 
-                baseDur: 30, // 30 segundos por estiramiento
+                baseDur: 30, 
                 img: GITHUB_REPO + ex.file 
             };
         });
@@ -389,10 +390,13 @@
                     while(sel.length<5 && rem.length>0) sel.push(rem.shift()); 
                 }
                 let seq=[]; 
-                // Warmup: Intentamos video, si falla usamos fallback (imagen)
+                
+                // 1. CALENTAMIENTO
+                // Intenta video, si falla (onerror) usa fallback
                 seq.push({ type:'warmup', duration:300, title:"CALENTAMIENTO", speak:"Calentamiento", media: WARMUP_URL, fallback: WARMUP_FALLBACK }); 
                 
-                // Cambio solicitado: 20 segundos de descanso
+                // 2. RUTINA PRINCIPAL
+                // Mejora: 20 segundos de descanso
                 let baseRest = 20; 
                 let rest = Math.floor(baseRest * cfg.restMult); 
                 let laps=parseInt(this.state.checkin.laps)||2; 
@@ -403,11 +407,12 @@
                         let r=ex.baseReps?Math.floor(ex.baseReps*cfg.repMult):null; 
                         let d=ex.baseDur?Math.floor(ex.baseDur*cfg.durMult):null; 
                         seq.push({ type:'exercise', data:{...ex, reps:r, duration:d}, lap:l, totalLaps:laps, exIndex:i+1, totalEx:sel.length, speak:ex.name }); 
-                        if(!(l===laps && i===sel.length-1)) seq.push({ type:'rest', duration:rest, title:"DESCANSO", speak:"Descanso" }); 
+                        // Añadimos paso de descanso explícito
+                        if(!(l===laps && i===sel.length-1)) seq.push({ type:'rest', duration:rest, title:"DESCANSO 20s", speak:"Descanso" }); 
                     }); 
                 }
 
-                // NUEVA SECCIÓN DE ESTIRAMIENTOS
+                // 3. ESTIRAMIENTOS (NUEVA SECCIÓN)
                 seq.push({ type:'rest', duration:15, title:"PREPARANDO ESTIRAMIENTOS", speak:"Preparando estiramientos" });
                 STRETCH_DB.forEach((ex, i) => {
                      seq.push({ type:'exercise', data:{...ex, reps: null, duration: 30}, lap:1, totalLaps:1, exIndex:i+1, totalEx:STRETCH_DB.length, speak:ex.name });
@@ -426,30 +431,40 @@
                 let url = step.type==='exercise' ? step.data.img : step.media; 
                 let isVid = url && (url.endsWith('.mp4') || url.endsWith('.mov'));
                 
+                // Reset placeholder
+                pl.innerHTML = "";
+
                 if(url) {
                     if(isVid){ 
                         vid.src=url;
-                        // Lógica de fallback corregida para video
+                        vid.classList.remove('hidden');
+                        // LÓGICA DE VIDEO MEJORADA
                         vid.onerror = () => { 
                             vid.classList.add('hidden'); 
                             if(step.fallback) {
+                                // Si hay fallback (calentamiento), cargar la imagen
                                 img.src = step.fallback; 
                                 img.classList.remove('hidden');
-                                img.onerror = () => { img.classList.add('hidden'); pl.classList.remove('hidden'); pl.innerHTML="VIDEO NO DISPONIBLE"; };
+                                img.onerror = () => { 
+                                    img.classList.add('hidden'); 
+                                    pl.classList.remove('hidden'); 
+                                    pl.innerHTML = "<b>" + step.title + "</b>"; 
+                                };
                             } else {
-                                pl.classList.remove('hidden'); pl.innerHTML="VIDEO NO DISPONIBLE"; 
+                                pl.classList.remove('hidden'); 
+                                pl.innerHTML = "<b>" + (step.data ? step.data.name : step.title) + "</b>"; 
                             }
                         };
-                        vid.classList.remove('hidden'); 
                         vid.play().catch(()=>{ vid.onerror(); });
                     } else { 
                         img.src=url; 
                         img.classList.remove('hidden'); 
-                        // Placeholder para estiramientos si no hay GIF
+                        // LÓGICA DE IMAGEN MEJORADA (ESTIRAMIENTOS)
                         img.onerror = function() { 
                             img.classList.add('hidden'); 
                             pl.classList.remove('hidden'); 
-                            pl.innerHTML=`<i data-lucide="image" style="width:48px;height:48px;color:#ddd"></i><br><b>${step.data ? step.data.name : ''}</b>`; 
+                            // Mostramos el NOMBRE si no hay GIF
+                            pl.innerHTML = "<i data-lucide='image-off' style='width:48px;height:48px;color:#ccc'></i><br><b>" + step.data.name + "</b>"; 
                             lucide.createIcons();
                         };
                     }
@@ -458,7 +473,7 @@
                 }
                 
                 if(step.type==='exercise') { const ex=step.data; nm.innerText=ex.name; rp.innerText=ex.reps?"x "+ex.reps:ex.duration+" seg"; rnd.innerText=`VUELTA ${step.lap}/${step.totalLaps}`; if(ex.duration){ tm.innerText=this.fmt(ex.duration); this.state.timerValue=ex.duration; this.startCountdown(); } else { this.state.timerValue=0; tm.innerText="00:00"; this.startStopwatch(); } }
-                else { nm.innerText=step.title; rp.innerText=""; rnd.innerText=""; ph.classList.remove('hidden'); ph.classList.remove('video-mode'); document.getElementById('phase-title').innerText=step.title; document.getElementById('phase-timer').innerText=step.duration; tm.innerText = this.fmt(step.duration); this.state.timerValue=step.duration; this.startCountdown(); }
+                else { nm.innerText=""; rp.innerText=""; rnd.innerText=""; ph.classList.remove('hidden'); ph.classList.remove('video-mode'); document.getElementById('phase-title').innerText=step.title; document.getElementById('phase-timer').innerText=step.duration; tm.innerText = this.fmt(step.duration); this.state.timerValue=step.duration; this.startCountdown(); }
             },
             startCountdown() { this.state.timerInterval=setInterval(()=>{ if(this.state.isPaused) return; this.state.timerValue--; document.getElementById('phase-timer').innerText=this.state.timerValue; document.getElementById('w-timer').innerText=this.fmt(this.state.timerValue); if(this.state.timerValue<=0){ clearInterval(this.state.timerInterval); this.nextStep(); } }, 1000); },
             startStopwatch() { this.state.timerInterval=setInterval(()=>{ if(!this.state.isPaused){ this.state.timerValue++; document.getElementById('w-timer').innerText=this.fmt(this.state.timerValue); } }, 1000); },
