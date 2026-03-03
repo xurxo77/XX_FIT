@@ -250,59 +250,60 @@
         };
         const QUOTES = ["El dolor es temporal.", "No cuentes los días.", "Tu cuerpo puede todo.", "El único mal entreno es el que no se hace."];
 
-        // --- BASE DE DATOS: SMARTWORKOUT.FR ---
+        // --- BASE DE DATOS: SMARTWORKOUT TRADUCIDO AL ESPAÑOL ---
+        // Los nombres de archivo (file) se mantienen igual porque son los que subiste.
         
         const SMART_WORKOUT_DATA = [
-            // POIDS CORPOREL
-            {id: 101, name: "Pompes", file: "pompes.gif", target: "pectorals", mat: "esterilla"},
-            {id: 102, name: "Pompes diamant", file: "pompes-diamant.gif", target: "triceps", mat: "esterilla"},
-            {id: 103, name: "Pompes décliné", file: "pompes-decline.gif", target: "pectorals", mat: "esterilla"},
-            {id: 104, name: "Pompes incliné", file: "pompes-incline.gif", target: "pectorals", mat: "banco"},
-            {id: 105, name: "Dips (chaises)", file: "dips-chaises.gif", target: "triceps", mat: "banco"},
-            {id: 106, name: "Traction (pronation)", file: "traction-pronation.gif", target: "lats", mat: "esterilla"},
-            {id: 107, name: "Traction (supination)", file: "traction-supination.gif", target: "biceps", mat: "esterilla"},
+            // PESO CORPORAL
+            {id: 101, name: "Flexiones", file: "pompes.gif", target: "pectorals", mat: "esterilla"},
+            {id: 102, name: "Flexiones diamante", file: "pompes-diamant.gif", target: "triceps", mat: "esterilla"},
+            {id: 103, name: "Flexiones declinadas", file: "pompes-decline.gif", target: "pectorals", mat: "esterilla"},
+            {id: 104, name: "Flexiones inclinadas", file: "pompes-incline.gif", target: "pectorals", mat: "banco"},
+            {id: 105, name: "Fondos en silla", file: "dips-chaises.gif", target: "triceps", mat: "banco"},
+            {id: 106, name: "Dominadas (pronación)", file: "traction-pronation.gif", target: "lats", mat: "esterilla"},
+            {id: 107, name: "Dominadas (supinación)", file: "traction-supination.gif", target: "biceps", mat: "esterilla"},
             {id: 108, name: "Muscle-up", file: "muscle-up.gif", target: "lats", mat: "esterilla"},
-            {id: 109, name: "Squat", file: "squat.gif", target: "quads", mat: "esterilla"},
-            {id: 110, name: "Fentes avant", file: "fentes-avant.gif", target: "glutes", mat: "esterilla"},
-            {id: 111, name: "Fentes arrière", file: "fentes-arriere.gif", target: "glutes", mat: "esterilla"},
+            {id: 109, name: "Sentadilla", file: "squat.gif", target: "quads", mat: "esterilla"},
+            {id: 110, name: "Zancadas adelante", file: "fentes-avant.gif", target: "glutes", mat: "esterilla"},
+            {id: 111, name: "Zancadas atrás", file: "fentes-arriere.gif", target: "glutes", mat: "esterilla"},
             {id: 112, name: "Burpee", file: "burpee.gif", target: "cardio", mat: "esterilla"},
-            {id: 113, name: "Mountain Climber", file: "mountain-climber.gif", target: "cardio", mat: "esterilla"},
-            {id: 114, name: "Crunch", file: "crunch.gif", target: "abs", mat: "esterilla"},
-            {id: 115, name: "Relevé de jambes", file: "releve-jambes.gif", target: "abs", mat: "esterilla"},
-            {id: 116, name: "Planche (Gainage)", file: "plance-gainage.gif", target: "abs", mat: "esterilla"},
+            {id: 113, name: "Escalador", file: "mountain-climber.gif", target: "cardio", mat: "esterilla"},
+            {id: 114, name: "Crunch abdominal", file: "crunch.gif", target: "abs", mat: "esterilla"},
+            {id: 115, name: "Elevación de piernas", file: "releve-jambes.gif", target: "abs", mat: "esterilla"},
+            {id: 116, name: "Plancha abdominal", file: "plance-gainage.gif", target: "abs", mat: "esterilla"},
             {id: 117, name: "Superman", file: "superman.gif", target: "spine", mat: "esterilla"},
-            {id: 118, name: "Ponte fessier", file: "ponte-fessier.gif", target: "glutes", mat: "esterilla"},
-            {id: 119, name: "Jumping Jacks", file: "jumping-jacks.gif", target: "cardio", mat: "esterilla"},
+            {id: 118, name: "Puente de glúteos", file: "ponte-fessier.gif", target: "glutes", mat: "esterilla"},
+            {id: 119, name: "Saltos de tijera", file: "jumping-jacks.gif", target: "cardio", mat: "esterilla"},
 
-            // HALTÈRES
-            {id: 201, name: "Développé épaules haltères", file: "developpe-epaules.gif", target: "delts", mat: "mancuernas"},
-            {id: 202, name: "Élévations latérales", file: "elevations-laterales.gif", target: "delts", mat: "mancuernas"},
-            {id: 203, name: "Élévations frontales", file: "elevations-frontales.gif", target: "delts", mat: "mancuernas"},
-            {id: 204, name: "Curl biceps haltères", file: "curl-biceps.gif", target: "biceps", mat: "mancuernas"},
-            {id: 205, name: "Curl marteau", file: "curl-marteau.gif", target: "biceps", mat: "mancuernas"},
-            {id: 206, name: "Extension triceps haltère", file: "extension-triceps-haltere.gif", target: "triceps", mat: "mancuernas"},
-            {id: 207, name: "Développé couché haltères", file: "developpe-couche.gif", target: "pectorals", mat: "mancuernas"},
-            {id: 208, name: "Écarté couché haltères", file: "ecarte-couche.gif", target: "pectorals", mat: "mancuernas"},
-            {id: 209, name: "Rowing haltère une main", file: "rowing-haltere.gif", target: "upper back", mat: "mancuernas"},
-            {id: 210, name: "Squat haltères", file: "squat-halteres.gif", target: "quads", mat: "mancuernas"},
-            {id: 211, name: "Fentes haltères", file: "fentes-halteres.gif", target: "glutes", mat: "mancuernas"},
-            {id: 212, name: "Soulevé de terre haltères", file: "souleve-terre.gif", target: "hamstrings", mat: "mancuernas"},
+            // MANCUERNAS
+            {id: 201, name: "Press militar con mancuernas", file: "developpe-epaules.gif", target: "delts", mat: "mancuernas"},
+            {id: 202, name: "Elevaciones laterales", file: "elevations-laterales.gif", target: "delts", mat: "mancuernas"},
+            {id: 203, name: "Elevaciones frontales", file: "elevations-frontales.gif", target: "delts", mat: "mancuernas"},
+            {id: 204, name: "Curl de bíceps", file: "curl-biceps.gif", target: "biceps", mat: "mancuernas"},
+            {id: 205, name: "Curl martillo", file: "curl-marteau.gif", target: "biceps", mat: "mancuernas"},
+            {id: 206, name: "Extensión de tríceps", file: "extension-triceps-haltere.gif", target: "triceps", mat: "mancuernas"},
+            {id: 207, name: "Press banca con mancuernas", file: "developpe-couche.gif", target: "pectorals", mat: "mancuernas"},
+            {id: 208, name: "Aperturas con mancuernas", file: "ecarte-couche.gif", target: "pectorals", mat: "mancuernas"},
+            {id: 209, name: "Remo con mancuerna", file: "rowing-haltere.gif", target: "upper back", mat: "mancuernas"},
+            {id: 210, name: "Sentadilla con mancuernas", file: "squat-halteres.gif", target: "quads", mat: "mancuernas"},
+            {id: 211, name: "Zancadas con mancuernas", file: "fentes-halteres.gif", target: "glutes", mat: "mancuernas"},
+            {id: 212, name: "Peso muerto con mancuernas", file: "souleve-terre.gif", target: "hamstrings", mat: "mancuernas"},
 
             // BANCO
-            {id: 301, name: "Développé couché (banco)", file: "developpe-banc.gif", target: "pectorals", mat: "banco"},
-            {id: 302, name: "Écarté sur banc incliné", file: "ecarte-incline.gif", target: "pectorals", mat: "banco"},
-            {id: 303, name: "Curl concentré", file: "curl-concentre.gif", target: "biceps", mat: "banco"},
-            {id: 304, name: "Extension triceps (banco)", file: "extension-triceps-banc.gif", target: "triceps", mat: "banco"},
-            {id: 305, name: "Dips entre bancs", file: "dips-bancs.gif", target: "triceps", mat: "banco"},
+            {id: 301, name: "Press banca (en banco)", file: "developpe-banc.gif", target: "pectorals", mat: "banco"},
+            {id: 302, name: "Aperturas inclinado", file: "ecarte-incline.gif", target: "pectorals", mat: "banco"},
+            {id: 303, name: "Curl concentrado", file: "curl-concentre.gif", target: "biceps", mat: "banco"},
+            {id: 304, name: "Extensión tríceps (banco)", file: "extension-triceps-banc.gif", target: "triceps", mat: "banco"},
+            {id: 305, name: "Fondos entre bancos", file: "dips-bancs.gif", target: "triceps", mat: "banco"},
 
-            // BANDES
-            {id: 401, name: "Tirage poitrine (bande)", file: "tirage-poitrine.gif", target: "lats", mat: "bandas"},
-            {id: 402, name: "Face pull (bande)", file: "face-pull.gif", target: "delts", mat: "bandas"},
-            {id: 403, name: "Curl biceps (bande)", file: "curl-bande.gif", target: "biceps", mat: "bandas"},
-            {id: 404, name: "Extension triceps (bande)", file: "extension-bande.gif", target: "triceps", mat: "bandas"},
-            {id: 405, name: "Squat (bande)", file: "squat-bande.gif", target: "glutes", mat: "bandas"},
-            {id: 406, name: "Abductions hanches (bande)", file: "abductions.gif", target: "abductors", mat: "bandas"},
-            {id: 407, name: "Good morning (bande)", file: "good-morning.gif", target: "hamstrings", mat: "bandas"}
+            // BANDAS
+            {id: 401, name: "Jalón al pecho (banda)", file: "tirage-poitrine.gif", target: "lats", mat: "bandas"},
+            {id: 402, name: "Face pull (banda)", file: "face-pull.gif", target: "delts", mat: "bandas"},
+            {id: 403, name: "Curl bíceps (banda)", file: "curl-bande.gif", target: "biceps", mat: "bandas"},
+            {id: 404, name: "Extensión tríceps (banda)", file: "extension-bande.gif", target: "triceps", mat: "bandas"},
+            {id: 405, name: "Sentadilla (banda)", file: "squat-bande.gif", target: "glutes", mat: "bandas"},
+            {id: 406, name: "Abducciones cadera (banda)", file: "abductions.gif", target: "abductors", mat: "bandas"},
+            {id: 407, name: "Good morning (banda)", file: "good-morning.gif", target: "hamstrings", mat: "bandas"}
         ];
 
         // Parser simple
@@ -322,7 +323,7 @@
             if(ex.mat === 'bandas') e = ['bandas'];
 
             return { 
-                name: ex.name, // Nombre en Francés
+                name: ex.name, // Nombre en ESPAÑOL
                 muscles: m, 
                 equipment: e, 
                 baseReps: (m.includes('core')||m.includes('full'))?null:12, 
@@ -376,7 +377,7 @@
                     while(sel.length<5 && rem.length>0) sel.push(rem.shift()); 
                 }
                 let seq=[]; 
-                seq.push({ type:'warmup', duration:300, title:"ÉCHAUFFEMENT", speak:"Calentamiento", media: WARMUP_URL }); 
+                seq.push({ type:'warmup', duration:300, title:"CALENTAMIENTO", speak:"Calentamiento", media: WARMUP_URL }); 
                 
                 let baseRest = 15; 
                 let rest = Math.floor(baseRest * cfg.restMult); 
@@ -388,10 +389,10 @@
                         let r=ex.baseReps?Math.floor(ex.baseReps*cfg.repMult):null; 
                         let d=ex.baseDur?Math.floor(ex.baseDur*cfg.durMult):null; 
                         seq.push({ type:'exercise', data:{...ex, reps:r, duration:d}, lap:l, totalLaps:laps, exIndex:i+1, totalEx:sel.length, speak:ex.name }); 
-                        if(!(l===laps && i===sel.length-1)) seq.push({ type:'rest', duration:rest, title:"REPOS", speak:"Descanso" }); 
+                        if(!(l===laps && i===sel.length-1)) seq.push({ type:'rest', duration:rest, title:"DESCANSO", speak:"Descanso" }); 
                     }); 
                 }
-                seq.push({ type:'stretch', duration:20, title:"ÉTIREMENTS", speak:"Estiramientos" }); 
+                seq.push({ type:'stretch', duration:20, title:"ESTIRAMIENTOS", speak:"Estiramientos" }); 
                 this.state.workoutSequence=seq; this.state.currentStepIndex=0; 
                 this.startWorkoutSession();
             },
@@ -427,7 +428,7 @@
             fmt(s) { let m=Math.floor(s/60); let sec=s%60; return m.toString().padStart(2,'0')+':'+sec.toString().padStart(2,'0'); },
             nextStep() { this.loadStep(this.state.currentStepIndex + 1); },
             prevStep() { if(this.state.currentStepIndex>0) this.loadStep(this.state.currentStepIndex-1); },
-            togglePause() { this.state.isPaused=!this.state.isPaused; document.getElementById('pause-text').innerText=this.state.isPaused?"CONTINUER":"PAUSER"; if(this.state.isPaused) document.getElementById('workout-video').pause(); else document.getElementById('workout-video').play().catch(()=>{}); },
+            togglePause() { this.state.isPaused=!this.state.isPaused; document.getElementById('pause-text').innerText=this.state.isPaused?"CONTINUAR":"PAUSAR"; if(this.state.isPaused) document.getElementById('workout-video').pause(); else document.getElementById('workout-video').play().catch(()=>{}); },
             exitWorkout() { clearInterval(this.state.timerInterval); document.getElementById('workout-video').pause(); if(this.state.wakeLock) this.state.wakeLock.release(); this.navigate('home'); },
             finishSession() { clearInterval(this.state.timerInterval); document.getElementById('workout-video').pause(); if(this.state.wakeLock) this.state.wakeLock.release(); if(!this.state.user.history) this.state.user.history=[]; this.state.user.history.push({date:Date.now(), dur:document.getElementById('w-timer').innerText}); this.state.user.streak=(this.state.user.streak||0)+1; this.saveUserData(); document.getElementById('motivational-text').innerText=`"${QUOTES[Math.floor(Math.random()*QUOTES.length)]}"`; document.getElementById('finish-modal').classList.remove('hidden'); },
             closeFinishModal() { document.getElementById('finish-modal').classList.add('hidden'); this.navigate('home'); this.updateHomeUI(); },
