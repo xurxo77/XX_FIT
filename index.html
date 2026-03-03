@@ -54,7 +54,8 @@
         .phase-screen h3 { font-family: var(--title-font); font-size: 2rem; margin-bottom: 10px; text-transform: uppercase; }
         .phase-screen .countdown { font-size: 5rem; font-family: var(--title-font); line-height: 1; }
         #workout-img, #workout-video { width: 100%; height: 100%; object-fit: contain; background: #FFFFFF; }
-        #video-placeholder { color: #ccc; position: absolute; text-align: center; padding: 20px; }
+        #video-placeholder { color: #ccc; position: absolute; text-align: center; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #video-placeholder b { font-size: 1.5rem; color: #333; margin-top: 10px; }
         .workout-info { text-align: center; margin-bottom: 30px; }
         #w-exercise-name { font-size: 2.5rem; margin-bottom: 10px; }
         .workout-controls { position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--card-bg); border-top: 1px solid var(--border-color); padding: 15px; display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 10px; z-index: 50; border-radius: 20px 20px 0 0; }
@@ -237,9 +238,9 @@
         try { lucide.createIcons(); } catch(e) {}
 
         // CONFIG
-        // Apuntamos directamente a la raíz del repositorio
         const GITHUB_REPO = "https://raw.githubusercontent.com/xurxo77/XX_FIT/main/";
         const WARMUP_URL = GITHUB_REPO + "warmup.mp4"; 
+        const WARMUP_FALLBACK = GITHUB_REPO + "mountain-climber.gif"; // Fallback por si el video falla
         
         const LEVEL_CONFIG = {
             'recluta':   { repMult: 0.8, durMult: 0.8, restMult: 1.4 },
@@ -250,8 +251,7 @@
         };
         const QUOTES = ["El dolor es temporal.", "No cuentes los días.", "Tu cuerpo puede todo.", "El único mal entreno es el que no se hace."];
 
-        // --- BASE DE DATOS: SMARTWORKOUT TRADUCIDO AL ESPAÑOL ---
-        // Los nombres de archivo (file) se mantienen igual porque son los que subiste.
+        // --- BASE DE DATOS PRINCIPAL ---
         
         const SMART_WORKOUT_DATA = [
             // PESO CORPORAL
@@ -306,6 +306,16 @@
             {id: 407, name: "Good morning (banda)", file: "good-morning.gif", target: "hamstrings", mat: "bandas"}
         ];
 
+        // --- NUEVA SECCIÓN DE ESTIRAMIENTOS (Placeholder GIFs) ---
+        const STRETCH_DATA = [
+            {id: 500, name: "Estiramiento de cuello", file: "estiramiento-cuello.gif", target: "spine", mat: "esterilla"},
+            {id: 501, name: "Estiramiento de hombros", file: "estiramiento-hombros.gif", target: "delts", mat: "esterilla"},
+            {id: 502, name: "Estiramiento de tríceps", file: "estiramiento-triceps.gif", target: "triceps", mat: "esterilla"},
+            {id: 503, name: "Estiramiento de pecho", file: "estiramiento-pectoral.gif", target: "pectorals", mat: "esterilla"},
+            {id: 504, name: "Estiramiento de espalda", file: "estiramiento-espalda.gif", target: "lats", mat: "esterilla"},
+            {id: 505, name: "Estiramiento de isquios", file: "estiramiento-isquios.gif", target: "hamstrings", mat: "esterilla"}
+        ];
+
         // Parser simple
         const EXERCISE_DB = SMART_WORKOUT_DATA.map(ex => {
             let m = []; 
@@ -315,19 +325,21 @@
             if(['quads','hamstrings','glutes','calves','adductors','abductors'].includes(ex.target)) m.push('legs'); 
             if(['cardio'].includes(ex.target)) m.push('full'); 
             if(m.length===0) m.push('full');
-            
             let e = [];
             if(ex.mat === 'esterilla') e = ['esterilla'];
             if(ex.mat === 'mancuernas') e = ['mancuernas'];
             if(ex.mat === 'banco') e = ['banco'];
             if(ex.mat === 'bandas') e = ['bandas'];
+            return { name: ex.name, muscles: m, equipment: e, baseReps: (m.includes('core')||m.includes('full'))?null:12, baseDur: (m.includes('core')||m.includes('full'))?40:null, img: GITHUB_REPO + ex.file };
+        });
 
-            return { 
-                name: ex.name, // Nombre en ESPAÑOL
-                muscles: m, 
-                equipment: e, 
-                baseReps: (m.includes('core')||m.includes('full'))?null:12, 
-                baseDur: (m.includes('core')||m.includes('full'))?40:null, 
+        const STRETCH_DB = STRETCH_DATA.map(ex => {
+             return { 
+                name: ex.name, 
+                muscles: ['core'], // Clasificación simple
+                equipment: ['esterilla'], 
+                baseReps: null, 
+                baseDur: 30, // 30 segundos por estiramiento
                 img: GITHUB_REPO + ex.file 
             };
         });
@@ -377,9 +389,11 @@
                     while(sel.length<5 && rem.length>0) sel.push(rem.shift()); 
                 }
                 let seq=[]; 
-                seq.push({ type:'warmup', duration:300, title:"CALENTAMIENTO", speak:"Calentamiento", media: WARMUP_URL }); 
+                // Warmup: Intentamos video, si falla usamos fallback (imagen)
+                seq.push({ type:'warmup', duration:300, title:"CALENTAMIENTO", speak:"Calentamiento", media: WARMUP_URL, fallback: WARMUP_FALLBACK }); 
                 
-                let baseRest = 15; 
+                // Cambio solicitado: 20 segundos de descanso
+                let baseRest = 20; 
                 let rest = Math.floor(baseRest * cfg.restMult); 
                 let laps=parseInt(this.state.checkin.laps)||2; 
                 if(pain==='si'){ laps=1; rest=25; }
@@ -392,7 +406,14 @@
                         if(!(l===laps && i===sel.length-1)) seq.push({ type:'rest', duration:rest, title:"DESCANSO", speak:"Descanso" }); 
                     }); 
                 }
-                seq.push({ type:'stretch', duration:20, title:"ESTIRAMIENTOS", speak:"Estiramientos" }); 
+
+                // NUEVA SECCIÓN DE ESTIRAMIENTOS
+                seq.push({ type:'rest', duration:15, title:"PREPARANDO ESTIRAMIENTOS", speak:"Preparando estiramientos" });
+                STRETCH_DB.forEach((ex, i) => {
+                     seq.push({ type:'exercise', data:{...ex, reps: null, duration: 30}, lap:1, totalLaps:1, exIndex:i+1, totalEx:STRETCH_DB.length, speak:ex.name });
+                     if(i < STRETCH_DB.length - 1) seq.push({ type:'rest', duration:10, title:"CAMBIO", speak:"Siguiente" });
+                });
+
                 this.state.workoutSequence=seq; this.state.currentStepIndex=0; 
                 this.startWorkoutSession();
             },
@@ -408,13 +429,29 @@
                 if(url) {
                     if(isVid){ 
                         vid.src=url;
-                        vid.onerror = () => { vid.classList.add('hidden'); pl.classList.remove('hidden'); pl.innerHTML="VIDEO NO DISPONIBLE"; };
+                        // Lógica de fallback corregida para video
+                        vid.onerror = () => { 
+                            vid.classList.add('hidden'); 
+                            if(step.fallback) {
+                                img.src = step.fallback; 
+                                img.classList.remove('hidden');
+                                img.onerror = () => { img.classList.add('hidden'); pl.classList.remove('hidden'); pl.innerHTML="VIDEO NO DISPONIBLE"; };
+                            } else {
+                                pl.classList.remove('hidden'); pl.innerHTML="VIDEO NO DISPONIBLE"; 
+                            }
+                        };
                         vid.classList.remove('hidden'); 
                         vid.play().catch(()=>{ vid.onerror(); });
                     } else { 
                         img.src=url; 
                         img.classList.remove('hidden'); 
-                        img.onerror = function() { img.classList.add('hidden'); pl.classList.remove('hidden'); pl.innerHTML=`<b>${step.data.name}</b>`; };
+                        // Placeholder para estiramientos si no hay GIF
+                        img.onerror = function() { 
+                            img.classList.add('hidden'); 
+                            pl.classList.remove('hidden'); 
+                            pl.innerHTML=`<i data-lucide="image" style="width:48px;height:48px;color:#ddd"></i><br><b>${step.data ? step.data.name : ''}</b>`; 
+                            lucide.createIcons();
+                        };
                     }
                 } else {
                      pl.classList.remove('hidden'); pl.innerHTML=`<b>${step.data.name}</b>`;
