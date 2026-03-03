@@ -49,7 +49,6 @@
         .exit-btn { background: transparent; border: 1px solid var(--border-color); color: var(--gray-text); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .lap-indicator { background: var(--card-bg); padding: 5px 10px; border-radius: 8px; font-size: 0.9rem; border: 1px solid var(--border-color); }
         .video-container { width: 100%; aspect-ratio: 4/5; background-color: #FFFFFF; margin-bottom: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; overflow: hidden; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        /* PHASE SCREEN: Pantalla blanca que tapa todo */
         .phase-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #121212; background: #FFF; z-index: 10; }
         .phase-screen h3 { font-family: var(--title-font); font-size: 2.5rem; margin-bottom: 10px; text-transform: uppercase; }
         .phase-screen .countdown { font-size: 6rem; font-family: var(--title-font); line-height: 1; }
@@ -199,7 +198,6 @@
                 <span id="w-round" class="lap-indicator">VUELTA 1</span>
             </div>
             <div class="video-container">
-                <!-- PHASE SCREEN: Pantalla blanca con título grande. -->
                 <div id="phase-screen" class="phase-screen hidden"><h3 id="phase-title">CALENTAMIENTO</h3><div id="phase-timer" class="countdown">20</div><p id="phase-subtitle">¡Prepárate!</p></div>
                 <div id="video-placeholder"><i data-lucide="image"></i><br>GIF</div>
                 <img id="workout-img" class="hidden" src="" alt="Ejercicio">
@@ -298,14 +296,23 @@
             {id: 304, name: "Extensión tríceps (banco)", file: "extension-triceps-banc.gif", target: "triceps", mat: "banco"},
             {id: 305, name: "Fondos entre bancos", file: "dips-bancs.gif", target: "triceps", mat: "banco"},
 
-            // BANDAS
+            // BANDAS ELÁSTICAS (AMPLIADO)
             {id: 401, name: "Jalón al pecho (banda)", file: "tirage-poitrine.gif", target: "lats", mat: "bandas"},
             {id: 402, name: "Face pull (banda)", file: "face-pull.gif", target: "delts", mat: "bandas"},
             {id: 403, name: "Curl bíceps (banda)", file: "curl-bande.gif", target: "biceps", mat: "bandas"},
             {id: 404, name: "Extensión tríceps (banda)", file: "extension-bande.gif", target: "triceps", mat: "bandas"},
             {id: 405, name: "Sentadilla (banda)", file: "squat-bande.gif", target: "glutes", mat: "bandas"},
             {id: 406, name: "Abducciones cadera (banda)", file: "abductions.gif", target: "abductors", mat: "bandas"},
-            {id: 407, name: "Good morning (banda)", file: "good-morning.gif", target: "hamstrings", mat: "bandas"}
+            {id: 407, name: "Good morning (banda)", file: "good-morning.gif", target: "hamstrings", mat: "bandas"},
+            
+            // NUEVOS EJERCICIOS DE BANDA
+            {id: 408, name: "Aperturas (banda)", file: "band-pull-apart.gif", target: "delts", mat: "bandas"},
+            {id: 409, name: "Press de hombros (banda)", file: "band-shoulder-press.gif", target: "delts", mat: "bandas"},
+            {id: 410, name: "Remo con banda", file: "band-row.gif", target: "upper back", mat: "bandas"},
+            {id: 411, name: "Peso muerto (banda)", file: "band-deadlift.gif", target: "hamstrings", mat: "bandas"},
+            {id: 412, name: "Press de pecho (banda)", file: "band-chest-press.gif", target: "pectorals", mat: "bandas"},
+            {id: 413, name: "Elevación frontal (banda)", file: "band-front-raise.gif", target: "delts", mat: "bandas"},
+            {id: 414, name: "Caminata lateral (banda)", file: "band-monster-walk.gif", target: "glutes", mat: "bandas"}
         ];
 
         // --- ESTIRAMIENTOS ---
@@ -420,7 +427,6 @@
             },
             async startWorkoutSession() { try{ if('wakeLock' in navigator) this.state.wakeLock = await navigator.wakeLock.request('screen'); document.getElementById('nosleep-video').play().catch(()=>{}); }catch(e){} this.navigate('workout'); this.loadStep(0); },
             
-            // ---- FUNCIÓN loadStep SIMPLIFICADA Y ROBUSTA ----
             loadStep(i) {
                 if(i>=this.state.workoutSequence.length) { this.finishSession(); return; } 
                 this.state.currentStepIndex=i; 
@@ -438,7 +444,7 @@
                 
                 clearInterval(this.state.timerInterval); 
                 
-                // 1. RESETEAR TODO (Ocultar todo)
+                // 1. RESETEAR TODO
                 ph.classList.add('hidden');
                 img.classList.add('hidden');
                 vid.classList.add('hidden');
@@ -453,17 +459,14 @@
                 
                 try{ if(step.speak && 'speechSynthesis' in window) { speechSynthesis.cancel(); let u=new SpeechSynthesisUtterance(step.speak); u.lang='es-ES'; speechSynthesis.speak(u); } }catch(e){}
                 
-                // 2. LÓGICA SEGÚN TIPO DE PASO
+                // 2. LÓGICA SEGÚN TIPO
                 if(step.type === 'exercise') {
-                    // ---- EJERCICIO ----
                     const ex = step.data;
                     
-                    // Poner textos
                     nm.innerText = ex.name;
                     rp.innerText = ex.reps ? "x " + ex.reps : ex.duration + " seg";
                     rnd.innerText = `VUELTA ${step.lap}/${step.totalLaps}`;
                     
-                    // Cargar Imagen
                     let url = ex.img;
                     if(url.endsWith('.mp4')) {
                         vid.src = url;
@@ -475,23 +478,17 @@
                         img.onerror = () => { img.classList.add('hidden'); pl.classList.remove('hidden'); pl.innerHTML = "<b>" + ex.name + "</b>"; lucide.createIcons(); };
                     }
                     
-                    // Timer
                     if(ex.duration){ tm.innerText=this.fmt(ex.duration); this.state.timerValue=ex.duration; this.startCountdown(); } 
                     else { this.state.timerValue=0; tm.innerText="00:00"; this.startStopwatch(); }
                 
                 } else {
-                    // ---- NO EJERCICIO (Calentamiento, Descanso, Estiramientos) ----
-                    
-                    // Determinar si hay video (Solo Calentamiento suele tenerlo)
                     let url = step.media; 
                     let isVid = url && url.endsWith('.mp4');
                     
                     if (url && isVid) {
-                        // ---- VIDEO (Calentamiento) ----
                         vid.src = url;
                         vid.classList.remove('hidden');
                         vid.onerror = () => {
-                            // Si video falla, ir a fallback
                             vid.classList.add('hidden');
                             if(step.fallback) {
                                 img.src = step.fallback;
@@ -506,10 +503,9 @@
                                 pl.classList.remove('hidden'); pl.innerHTML = "<b>" + step.title + "</b>"; lucide.createIcons();
                             }
                         };
-                        vid.play().catch(() => { vid.onerror(); }); // Si autoplay falla, disparar error
+                        vid.play().catch(() => { vid.onerror(); });
                     } 
                     else if (url) {
-                        // ---- IMAGEN (Estiramientos sin video) ----
                         img.src = url;
                         img.classList.remove('hidden');
                         img.onerror = () => { 
@@ -520,27 +516,22 @@
                         };
                     } 
                     else {
-                        // ---- SIN MEDIA (DESCANSO) ----
-                        // Mostramos la pantalla blanca con el texto grande
                         ph.classList.remove('hidden');
                         document.getElementById('phase-title').innerText = step.title;
                         document.getElementById('phase-timer').innerText = step.duration;
                     }
                     
-                    // Poner título abajo también (opcional, para info)
                     nm.innerText = step.title;
                     
-                    // Timer
                     tm.innerText = this.fmt(step.duration); 
                     this.state.timerValue = step.duration; 
                     this.startCountdown();
                 }
             },
             startCountdown() { this.state.timerInterval=setInterval(()=>{ if(this.state.isPaused) return; this.state.timerValue--; 
-                // Actualizar relojes
                 let el = document.getElementById('phase-timer'); 
-                if(el) el.innerText = this.state.timerValue; // Texto grande
-                document.getElementById('w-timer').innerText = this.fmt(this.state.timerValue); // Texto abajo
+                if(el) el.innerText = this.state.timerValue;
+                document.getElementById('w-timer').innerText = this.fmt(this.state.timerValue);
                 if(this.state.timerValue<=0){ clearInterval(this.state.timerInterval); this.nextStep(); } 
             }, 1000); },
             startStopwatch() { this.state.timerInterval=setInterval(()=>{ if(!this.state.isPaused){ this.state.timerValue++; document.getElementById('w-timer').innerText=this.fmt(this.state.timerValue); } }, 1000); },
